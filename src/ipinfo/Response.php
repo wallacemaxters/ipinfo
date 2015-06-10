@@ -1,26 +1,38 @@
 <?php
 
-namespace WallaceMaxters\IPInfo
+namespace WallaceMaxters\IPInfo;
 
 use RunTimeException;
 use ArrayAccess;
+use JsonSerializable;
 /**
 * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
 */
 
-class Response implements ArrayAccess
+class Response implements ArrayAccess, JsonSerializable
 {
-	
+	/**
+	* @var array
+	*/
 	protected $infos = [];
-	
-	public function __construct(array $infos)
+
+	/**
+	* @param \WallaceMaxters|IPInfo\Ipinfo $ipinfo
+	* @uses \WallaceMaxters|IPInfo\Ipinfo::getResponse()
+	*/
+	public function __construct(IPInfo $ipinfo)
 	{
-		$this->infos = $infos;
+		$this->infos = $ipinfo->getResponse();
 	}
 	
+	/**
+	* Disabled method
+	* Implementario for \ArrayAccess
+	* @throws \RunTimeException
+	*/
 	public function offsetSet($key, $value)
 	{
-		throw new RunTimeException('Disabled');
+		throw new RunTimeException(sprintf('Method [%s] is disabled', __METHOD__));
 	}
 	
 	public function offsetGet($key)
@@ -32,16 +44,28 @@ class Response implements ArrayAccess
 	{
 		return array_key_exists($key, $this->infos);
 	}
-	
+
+	/**
+	* Disabled method
+	* Implementario for \ArrayAccess
+	* @throws \RunTimeException
+	*/	
 	public function offsetUnset($key)
 	{
-		throw new RunTimeException('Disabled');
+		throw new RunTimeException(sprintf('Method [%s] is disabled', __METHOD__));
 	}
 	
+	/**
+	* @return string|null
+	*/
 	public function getCountry()
 	{
 		return $this['country'];
 	}
+
+	/**
+	* @return array|null
+	*/
 	
 	public function getLoc()
 	{
@@ -55,11 +79,19 @@ class Response implements ArrayAccess
 		return array_map('floatval', explode(',', $loc));
 	}
 	
+	/**
+	* Get Region
+	* @return string
+	*/
 	public function getRegion()
 	{
 		return $this['region'];
 	}
-	
+
+	/**
+	* Get City
+	* @return string
+	*/
 	public function getCity()
 	{
 		return $this['city'];
@@ -78,5 +110,32 @@ class Response implements ArrayAccess
 	public function getHostname()
 	{
 		return $this['hostname'];
+	}
+
+	/**
+	* Implementation for \JsonSerializable
+	* @return array
+	*/
+	public function jsonSerialize()
+	{
+		return $this->infos;
+	}
+
+	/**
+	* Encodes the infos in JSON
+	* @return string
+	*/
+	public function toJson()
+	{
+		return json_encode($this);
+	}
+
+	/**
+	* Easy way to retrieve json encode of infos
+	* @return 
+	*/
+	public function __toString()
+	{
+		return $this->toJson();
 	}
 }
