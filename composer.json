@@ -10,5 +10,6 @@
 		"psr-4": {
 			"WallaceMaxters\\IPInfo\\": "src/ipinfo"
         }
-	}
+	},
+	"license" : "MIT"
 }
