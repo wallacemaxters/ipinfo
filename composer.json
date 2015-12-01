@@ -1,6 +1,5 @@
 {
 	"name"	   : "wallacemaxters/ipinfo",
-	"version"  : "1.0.0",
 	"description" : "PHP Library of ipinfo.io",
 	"require" : {
 		"php" : ">=5.4.0",
