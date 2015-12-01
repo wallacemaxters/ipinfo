@@ -9,12 +9,25 @@ class IPInfo
 {
 	const URL = '%s://ipinfo.io/%s/%s';
 	
+	/**
+	 * @var string
+	 **/
 	protected $ip;
 	
+	/**
+	 * Determine if request is ssl or https
+	 * @var boolean
+	 * */
 	protected $secure = false;
 
+	/**
+	 * @var string
+	 * */
 	protected $field = 'json';
 	
+	/**
+	 * @param string ip
+	 * */
 	public function __construct($ip)
 	{
 		$this->ip = $ip;
@@ -22,7 +35,7 @@ class IPInfo
 	
 	/**
 	* @param boolean $secure
-	* @return $this
+	* @return \WallaceMaxters\IPInfo\IPInfo
 	*/
 	public function setSecure($secure)
 	{
@@ -42,6 +55,7 @@ class IPInfo
 	
 	/**
 	* Create response from curl request
+	* @return array
 	*/
 
 	public function getResponse()
@@ -58,6 +72,12 @@ class IPInfo
 		return (array) json_decode($response, true);
 	}
 	
+	/**
+	 * Build the url for 
+	 * @access protected 
+	 * @return string
+	 * */
+
 	protected function buildUrl()
 	{
 		return sprintf(static::URL, $this->secure ? 'https' : 'http', $this->ip, $this->field);
@@ -65,22 +85,18 @@ class IPInfo
 	
 	/**
 	* Return a collection of responses or a response
+	* @static
+	* @param string $ip
 	* @return \WallaceMaxters\IPInfo\Collection or \WallaceMaxters\IPInfo\Response
 	*/
-	public static function get($ip, \Closure $callback = null)
+	public static function get($ip)
 	{
 		if (is_array($ip)) {
 			
 			return new Collection($ip);
 		}
 
-		$instance = new static($ip);
-
-		if ($callback instanceof \Closure) {
-
-			$callback($instance);
-		}
-		
 		return new Response($instance);
 	}
+
 }

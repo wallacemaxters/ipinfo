@@ -1,13 +1,13 @@
 <?php
 
+ini_set('default_charset', 'utf-8');
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 use WallaceMaxters\IPInfo\IPInfo;
 
 
-$info = IPInfo::get(['208.0.0.5', '192.1.1.1']);
+$info = IPInfo::get('189.100.189.32');
 
-echo '<pre>';
 
-print_r($info);
+print_r($info->toArray());

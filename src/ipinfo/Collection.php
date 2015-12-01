@@ -11,6 +11,11 @@ use ArrayIterator;
 class Collection implements IteratorAggregate
 {
 	protected $items = [];
+
+
+	/**
+	 * @param array $ips
+	 * */
 	
 	public function __construct(array $ips)
 	{
@@ -27,6 +32,10 @@ class Collection implements IteratorAggregate
 		}
 	}
 	
+	/**
+	 * @param IPInfo $ip
+	 * @return \WallaceMaxters\IPInfo\Collection
+	 * */
 	public function add(IPInfo $ip)
 	{
 		$this->items[$ip->getIP()] = $ip->getResponse();
@@ -34,11 +43,21 @@ class Collection implements IteratorAggregate
 		return $this;
 	}
 	
+	/**
+	 * Create IPInfo object from string and add in collection
+	 * @param string $ip 
+	 * @return \WallaceMaxters\IPInfo\Collection	 * 
+	 * */
 	public function addFromIP($ip)
 	{
 		return $this->add(new IPInfo($ip));
 	}
 	
+	/**
+	 * Remove IP from collection
+	 * @param string $ip
+	 *@return \WallaceMaxters\IPInfo\Collection
+	 * */
 	public function delete($ip)
 	{
 		unset($this->items[$ip]);
@@ -46,6 +65,10 @@ class Collection implements IteratorAggregate
 		return $this;
 	}
 	
+	/**
+	 * Implementaion for iteratorAggregate
+	 * @return \ArrayIterator
+	 * */
 	public function getIterator()
 	{
 		return new ArrayIterator($this->items);

@@ -3,7 +3,8 @@
 	"version"  : "1.0.0",
 	"description" : "PHP Library of ipinfo.io",
 	"require" : {
-		"php" : ">=5.4.0"
+		"php" : ">=5.4.0",
+		"ext-curl": "*",
 	},
 	"autoload" : {
 		"psr-4": {

@@ -112,6 +112,11 @@ class Response implements ArrayAccess, JsonSerializable
 		return $this['hostname'];
 	}
 
+	public function getOrg()
+	{
+		return $this['org'];
+	}
+
 	/**
 	* Implementation for \JsonSerializable
 	* @return array
@@ -138,4 +143,10 @@ class Response implements ArrayAccess, JsonSerializable
 	{
 		return $this->toJson();
 	}
+
+	public function toArray()
+	{
+		return $this->infos + ['location' => $this->getLoc()];
+	}
+
 }
