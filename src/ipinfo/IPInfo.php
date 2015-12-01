@@ -87,7 +87,7 @@ class IPInfo
 	* Return a collection of responses or a response
 	* @static
 	* @param string $ip
-	* @return \WallaceMaxters\IPInfo\Collection or \WallaceMaxters\IPInfo\Response
+	* @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
 	*/
 	public static function get($ip)
 	{
@@ -96,7 +96,7 @@ class IPInfo
 			return new Collection($ip);
 		}
 
-		return new Response($instance);
+		return new Response(new static($ip));
 	}
 
 }
