@@ -84,7 +84,7 @@ class IPInfo
 	}
 	
 	/**
-	* Return a collection of responses or a response
+	* Returns a collection of responses or a response
 	* @static
 	* @param string $ip
 	* @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
@@ -97,6 +97,23 @@ class IPInfo
 		}
 
 		return new Response(new static($ip));
+	}
+
+
+	/**
+	 * Returns a collection of response or a response by host passed
+	 * @param string $host
+	* @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
+	 * */
+
+	public static function getFromHost($host)
+	{
+		if (is_array($host)) {
+
+			return new Collection(array_map('gethostbyname', $host));
+		}
+
+		return new Response(new static(gethostname($host)));
 	}
 
 }
