@@ -7,113 +7,103 @@ namespace WallaceMaxters\IPInfo;
 */
 class IPInfo
 {
-	const URL = '%s://ipinfo.io/%s/%s';
-	
-	/**
-	 * @var string
-	 **/
-	protected $ip;
-	
-	/**
-	 * Determine if request is ssl or https
-	 * @var boolean
-	 * */
-	protected $secure = false;
+    const URL = '%s://ipinfo.io/%s/%s';
+    
+    /**
+     * @var string
+     **/
+    protected $ip;
+    
+    /**
+     * Determine if request is ssl or https
+     * @var boolean
+     * */
+    protected $secure = false;
 
-	/**
-	 * @var string
-	 * */
-	protected $field = 'json';
-	
-	/**
-	 * @param string ip
-	 * */
-	public function __construct($ip)
-	{
-		$this->ip = $ip;
-	}
-	
-	/**
-	* @param boolean $secure
-	* @return \WallaceMaxters\IPInfo\IPInfo
-	*/
-	public function setSecure($secure)
-	{
-		$this->secure = (bool) $secure;
+    /**
+     * @var string
+     * */
+    protected $field = 'json';
+    
+    /**
+     * @param string ip
+     * */
+    public function __construct($ip)
+    {
+        $this->ip = $ip;
+    }
+    
+    /**
+    * @param boolean $secure
+    * @return \WallaceMaxters\IPInfo\IPInfo
+    */
+    public function setSecure($secure)
+    {
+        $this->secure = (bool) $secure;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	* Get defined IP
-	* @return string
-	*/
-	public function getIP()
-	{
-		return $this->ip;
-	}
-	
-	/**
-	* Create response from curl request
-	* @return array
-	*/
+    /**
+    * Get defined IP
+    * @return string
+    */
+    public function getIP()
+    {
+        return $this->ip;
+    }
+    
+    /**
+    * Create response from curl request
+    * @return \WallaceMaxters\IPInfo\Response
+    */
 
-	public function getResponse()
-	{
-			
-		$curl = curl_init($this->buildUrl());
+    public function getResponse()
+    {
+        return new Response($this);
+    }
+    
+    /**
+     * Build the url for 
+     * @return string
+     * */
 
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-	
-		$response = curl_exec($curl);
-	
-		curl_close($curl);
-		
-		return (array) json_decode($response, true);
-	}
-	
-	/**
-	 * Build the url for 
-	 * @access protected 
-	 * @return string
-	 * */
+    public function buildUrl()
+    {
+        return sprintf(static::URL, $this->secure ? 'https' : 'http', $this->ip, $this->field);
+    }
+    
+    /**
+    * Returns a collection of responses or a response
+    * @static
+    * @param string $ip
+    * @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
+    */
+    public static function get($ip)
+    {
+        if (is_array($ip)) {
+            
+            return new Collection($ip);
+        }
 
-	protected function buildUrl()
-	{
-		return sprintf(static::URL, $this->secure ? 'https' : 'http', $this->ip, $this->field);
-	}
-	
-	/**
-	* Returns a collection of responses or a response
-	* @static
-	* @param string $ip
-	* @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
-	*/
-	public static function get($ip)
-	{
-		if (is_array($ip)) {
-			
-			return new Collection($ip);
-		}
-
-		return new Response(new static($ip));
-	}
+        return (new static($ip))->getResponse();
+    }
 
 
-	/**
-	 * Returns a collection of response or a response by host passed
-	 * @param string $host
-	* @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
-	 * */
+    /**
+     * Returns a collection of response or a response by host passed
+     * @param string $host
+    * @return \WallaceMaxters\IPInfo\Collection | \WallaceMaxters\IPInfo\Response
+     * */
 
-	public static function getFromHost($host)
-	{
-		if (is_array($host)) {
+    public static function getFromHost($host)
+    {
+        if (is_array($host)) {
 
-			return new Collection(array_map('gethostbyname', $host));
-		}
+            return new Collection(array_map('gethostbyname', $host));
+        }
 
-		return new Response(new static(gethostname($host)));
-	}
+        return static::get(gethostname($host));
+    }
 
 }
